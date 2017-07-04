@@ -1,0 +1,2 @@
+__sensu-client_db_dir: /var/db/sensu-client
+__sensu-client_conf_dir: /usr/local/etc/sensu-client

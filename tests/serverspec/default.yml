@@ -1,0 +1,5 @@
+- hosts: localhost
+  roles:
+    - ansible-role-sensu-client
+  vars:
+    sensu-client_config: ""

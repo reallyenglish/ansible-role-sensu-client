@@ -1,0 +1,6 @@
+---
+
+- name: Install sensu-client
+  pkgng:
+    name: sensu-client
+    state: present

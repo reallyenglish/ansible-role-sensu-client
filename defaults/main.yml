@@ -1,0 +1,8 @@
+sensu-client_user: sensu-client
+sensu-client_group: sensu-client
+sensu-client_log_dir: /var/log/sensu-client
+sensu-client_db_dir: "{{ __sensu-client_db_dir }}"
+sensu-client_service: sensu-client
+sensu-client_conf_dir: "{{ __sensu-client_conf_dir }}"
+sensu-client_conf_file: "{{ __sensu-client_conf_dir }}/sensu-client.conf"
+sensu-client_flags: ""
