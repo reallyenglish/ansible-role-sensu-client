@@ -5,33 +5,38 @@
 
 - include: "install-{{ ansible_os_family }}.yml"
 
-- name: Create log directory
+- name: Create sensu_client_conf_d_dir
   file:
-    path: "{{ sensu-client_log_dir }}"
-    mode: 0755
-    owner: "{{ sensu-client_user }}"
-    group: "{{ sensu-client_group }}"
+    path: "{{ sensu_client_conf_d_dir }}"
     state: directory
-  notify: Restart sensu-client
 
-- name: Create db directory
+- name: Create sensu_client_extensions_dir
   file:
-    path: "{{ sensu-client_db_dir }}"
-    mode: 0755
-    owner: "{{ sensu-client_user }}"
-    group: "{{ sensu-client_group }}"
+    path: "{{ sensu_client_extensions_dir }}"
     state: directory
-  notify: Restart sensu-client
 
-- name: Create sensu-client.conf
+- name: Create sensu_client_plugins_dir
+  file:
+    path: "{{ sensu_client_plugins_dir }}"
+    state: directory
+
+- name: Create sensu_client_config_file
   template:
-    src: sensu-client.conf.j2
-    dest: "{{ sensu-client_conf_file }}"
-    validate: echo %s
+    src: config.json.j2
+    dest: "{{ sensu_client_config_file }}"
+    validate: "python -c 'import sys; import json; json.loads(open(sys.argv[1]).read())' %s"
+  notify: Restart sensu-client
+
+- name: Create json files
+  template:
+    src: json.j2
+    dest: "{{ sensu_client_conf_d_dir }}/{{ item }}.json"
+    validate: "python -c 'import sys; import json; json.loads(open(sys.argv[1]).read())' %s"
+  with_items: "{{ sensu_client_config_fragments.keys() }}"
   notify: Restart sensu-client
 
 - name: Start sensu-client
   service:
-    name: "{{ sensu-client_service }}"
+    name: "{{ sensu_client_service }}"
     enabled: true
     state: started

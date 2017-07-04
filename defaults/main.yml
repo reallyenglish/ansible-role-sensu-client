@@ -1,8 +1,11 @@
-sensu-client_user: sensu-client
-sensu-client_group: sensu-client
-sensu-client_log_dir: /var/log/sensu-client
-sensu-client_db_dir: "{{ __sensu-client_db_dir }}"
-sensu-client_service: sensu-client
-sensu-client_conf_dir: "{{ __sensu-client_conf_dir }}"
-sensu-client_conf_file: "{{ __sensu-client_conf_dir }}/sensu-client.conf"
-sensu-client_flags: ""
+sensu_client_user: "{{ __sensu_client_user }}"
+sensu_client_group: "{{ __sensu_client_group }}"
+sensu_client_service: "{{ __sensu_client_service }}"
+sensu_client_config_dir: "{{ __sensu_client_config_dir }}"
+sensu_client_config_file: "{{ sensu_client_config_dir }}/config.json"
+sensu_client_conf_d_dir: "{{ sensu_client_config_dir }}/conf.d"
+sensu_client_extensions_dir: "{{ sensu_client_config_dir }}/extensions"
+sensu_client_plugins_dir: "{{ sensu_client_config_dir }}/plugins"
+sensu_client_flags: ""
+sensu_client_config: {}
+sensu_client_config_fragments: {}

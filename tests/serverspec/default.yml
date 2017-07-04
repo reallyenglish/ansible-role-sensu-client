@@ -2,4 +2,24 @@
   roles:
     - ansible-role-sensu-client
   vars:
-    sensu-client_config: ""
+    freebsd_repos:
+      sensu:
+        enabled: "true"
+        url: https://sensu.global.ssl.fastly.net/freebsd/FreeBSD:10:amd64/
+        mirror_type: srv
+        signature_type: none
+        priority: 100
+        state: present
+    sensu_client_config: {}
+    sensu_client_config_fragments:
+      client:
+        client:
+          name: foo
+          address: 127.0.0.1
+          subscriptions:
+            - production
+            - something
+      transport:
+        transport:
+          name: rabbitmq
+          reconnect_on_error: True

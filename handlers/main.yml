@@ -2,5 +2,5 @@
 
 - name: Restart sensu-client
   service:
-    name: sensu-client
+    name: "{{ sensu_client_service }}"
     state: restarted

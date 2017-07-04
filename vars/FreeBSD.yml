@@ -1,2 +1,4 @@
-__sensu-client_db_dir: /var/db/sensu-client
-__sensu-client_conf_dir: /usr/local/etc/sensu-client
+__sensu_client_user: sensu
+__sensu_client_group: sensu
+__sensu_client_service: sensu-client
+__sensu_client_config_dir: /usr/local/etc/sensu
