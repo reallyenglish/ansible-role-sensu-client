@@ -1,0 +1,39 @@
+---
+
+- name: Install sensu-client
+  gem:
+    name: sensu
+    user_install: no
+    state: present
+
+- name: Get ruby version
+  command: "ruby -e 'puts RUBY_VERSION'"
+  register: register_sensu_client_ruby_version
+  changed_when: false
+  always_run: yes
+
+- set_fact:
+    sensu_client_ruby_version: "{{ register_sensu_client_ruby_version.stdout.split('.') }}"
+
+- set_fact:
+    sensu_client_ruby_postfix: "{{ sensu_client_ruby_version[0] }}{{ sensu_client_ruby_version[1] }}"
+
+- name: Create rc for sensu-client
+  template:
+    src: OpenBSD.rc.j2
+    dest: /etc/rc.d/sensu_client
+    mode: 0555
+
+- name: Create sensu_client_group
+  group:
+    name: "{{ sensu_client_group }}"
+    state: present
+
+- name: Create sensu_client_user
+  user:
+    comment: sensu-client Daemon
+    createhome: no
+    group: "{{ sensu_client_group }}"
+    name: "{{ sensu_client_user }}"
+    shell: /sbin/nologin
+    state: present

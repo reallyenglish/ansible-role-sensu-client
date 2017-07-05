@@ -1,0 +1,6 @@
+---
+
+- name: Install sensu-client
+  apt:
+    name: sensu
+    state: present

@@ -1,0 +1,4 @@
+__sensu_client_user: _sensu
+__sensu_client_group: _sensu
+__sensu_client_service: sensu_client
+__sensu_client_config_dir: /etc/sensu

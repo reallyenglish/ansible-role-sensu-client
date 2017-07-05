@@ -8,16 +8,22 @@
 - name: Create sensu_client_conf_d_dir
   file:
     path: "{{ sensu_client_conf_d_dir }}"
+    owner: "{{ sensu_client_user }}"
+    group: "{{ sensu_client_group }}"
     state: directory
 
 - name: Create sensu_client_extensions_dir
   file:
     path: "{{ sensu_client_extensions_dir }}"
+    owner: "{{ sensu_client_user }}"
+    group: "{{ sensu_client_group }}"
     state: directory
 
 - name: Create sensu_client_plugins_dir
   file:
     path: "{{ sensu_client_plugins_dir }}"
+    owner: "{{ sensu_client_user }}"
+    group: "{{ sensu_client_group }}"
     state: directory
 
 - name: Create sensu_client_config_file
@@ -26,6 +32,14 @@
     dest: "{{ sensu_client_config_file }}"
     validate: "python -c 'import sys; import json; json.loads(open(sys.argv[1]).read())' %s"
   notify: Restart sensu-client
+
+
+- name: Create sensu_client_log_dir
+  file:
+    path: "{{ sensu_client_log_dir }}"
+    state: directory
+    owner: "{{ sensu_client_user }}"
+    group: "{{ sensu_client_group }}"
 
 - name: Create json files
   template:

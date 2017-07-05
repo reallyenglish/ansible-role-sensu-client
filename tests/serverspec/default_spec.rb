@@ -1,27 +1,47 @@
 require "spec_helper"
 require "serverspec"
 
-package = "sensu-client"
+package = "sensu"
 service = "sensu-client"
 config_dir = "/etc/sensu"
+log_dir = "/var/log/sensu"
 user    = "sensu"
 group   = "sensu"
 # XXX bare-minimum client does not listen on any ports
 ports   = []
 default_user = "root"
-default_group = "wheel"
+default_group = "root"
 ip_address = "127.0.0.1"
 
 case os[:family]
+when "openbsd"
+  user = "_sensu"
+  group = "_sensu"
+  default_group = "wheel"
+  service = "sensu_client"
 when "freebsd"
   config_dir = "/usr/local/etc/sensu"
   default_group = "wheel"
-  package = "sensu"
 end
 config = "#{config_dir}/config.json"
 
-describe package(package) do
-  it { should be_installed }
+if os[:family] == "openbsd"
+  describe package("sensu") do
+    it do
+      pending "the test does not find the gem"
+      should be_installed.by("gem")
+    end
+  end
+
+  describe command("gem list --local") do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should eq "" }
+    its(:stdout) { should match(/^sensu\s\(/) }
+  end
+else
+  describe package(package) do
+    it { should be_installed }
+  end
 end
 
 [
@@ -67,6 +87,14 @@ describe file("#{config_dir}/conf.d/client.json") do
   its(:content_as_json) { should include("client" => include("name" => "foo")) }
   its(:content_as_json) { should include("client" => include("address" => ip_address)) }
   its(:content_as_json) { should include("client" => include("subscriptions" => %w(production something))) }
+end
+
+describe file(log_dir) do
+  it { should exist }
+  it { should be_directory }
+  it { should be_mode 755 }
+  it { should be_owned_by user }
+  it { should be_grouped_into group }
 end
 
 describe service(service) do

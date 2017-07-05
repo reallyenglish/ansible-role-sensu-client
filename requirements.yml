@@ -1,2 +1,5 @@
 ---
 - name: reallyenglish.freebsd-repos
+- name: reallyenglish.apt-repo
+- name: reallyenglish.redhat-repo
+- name: reallyenglish.language-ruby

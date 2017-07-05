@@ -1,0 +1,11 @@
+#!/bin/sh
+
+daemon="/usr/local/bin/sensu-client{{ sensu_client_ruby_postfix }}"
+daemon_flags="-c {{ sensu_client_config_file }} -d {{ sensu_client_conf_d_dir }} -e {{ sensu_client_extensions_dir }} -l {{ sensu_client_log_dir }}/sensu-client.log -b"
+daemon_user="{{ sensu_client_user }}"
+
+. /etc/rc.d/rc.subr
+
+pexp="/usr/local/bin/ruby{{ sensu_client_ruby_postfix }} ${daemon}${daemon_flags:+ ${daemon_flags}}"
+
+rc_cmd $1

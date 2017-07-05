@@ -6,6 +6,7 @@ sensu_client_config_file: "{{ sensu_client_config_dir }}/config.json"
 sensu_client_conf_d_dir: "{{ sensu_client_config_dir }}/conf.d"
 sensu_client_extensions_dir: "{{ sensu_client_config_dir }}/extensions"
 sensu_client_plugins_dir: "{{ sensu_client_config_dir }}/plugins"
+sensu_client_log_dir: /var/log/sensu
 sensu_client_flags: ""
 sensu_client_config: {}
 sensu_client_config_fragments: {}

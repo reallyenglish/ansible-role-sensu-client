@@ -18,10 +18,19 @@ None
 | `sensu_client_conf_d_dir` | path to `conf.d` directory | `{{ sensu_client_config_dir }}/conf.d` |
 | `sensu_client_extensions_dir` | path to `extensions` directory | `{{ sensu_client_config_dir }}/extensions` |
 | `sensu_client_plugins_dir` | path to `plugins` directory | `{{ sensu_client_config_dir }}/plugins` |
+| `sensu_client_log_dir` | path to log directory | `/var/log/sensu` |
 | `sensu_client_flags` | not used yet | `""` |
 | `sensu_client_config` | YAML representation of `config.json` | `{}` |
 | `sensu_client_config_fragments` | YAML representation of JSON files under `conf.d` | `{}` |
 
+## Debian
+
+| Variable | Default |
+|----------|---------|
+| `__sensu_client_user` | `sensu` |
+| `__sensu_client_group` | `sensu` |
+| `__sensu_client_service` | `sensu-client` |
+| `__sensu_client_config_dir` | `/etc/sensu` |
 
 ## FreeBSD
 
@@ -32,17 +41,53 @@ None
 | `__sensu_client_service` | `sensu-client` |
 | `__sensu_client_config_dir` | `/usr/local/etc/sensu` |
 
+## OpenBSD
+
+| Variable | Default |
+|----------|---------|
+| `__sensu_client_user` | `_sensu` |
+| `__sensu_client_group` | `_sensu` |
+| `__sensu_client_service` | `sensu_client` |
+| `__sensu_client_config_dir` | `/etc/sensu` |
+
+## RedHat
+
+| Variable | Default |
+|----------|---------|
+| `__sensu_client_user` | `sensu` |
+| `__sensu_client_group` | `sensu` |
+| `__sensu_client_service` | `sensu-client` |
+| `__sensu_client_config_dir` | `/etc/sensu` |
+
 # Dependencies
 
-* reallyenglish.freebsd-repos (FreeBSD only)
+None
 
 # Example Playbook
 
 ```yaml
 - hosts: localhost
   roles:
+    - name: reallyenglish.apt-repo
+      when: ansible_os_family == 'Debian'
+    - name: reallyenglish.redhat-repo
+      when: ansible_os_family == 'RedHat'
+    - name: reallyenglish.language-ruby
+      when: ansible_os_family == 'OpenBSD'
+    - name: reallyenglish.freebsd-repos
+      when: ansible_os_family == 'FreeBSD'
     - ansible-role-sensu-client
   vars:
+    redhat_repo:
+      sensu:
+        baseurl: https://sensu.global.ssl.fastly.net/yum/$releasever/$basearch
+        gpgcheck: no
+        enabled: yes
+    apt_repo_keys_to_add:
+      - https://sensu.global.ssl.fastly.net/apt/pubkey.gpg
+    apt_repo_enable_apt_transport_https: yes
+    apt_repo_to_add:
+      - "deb https://sensu.global.ssl.fastly.net/apt {{ ansible_distribution_release }} main"
     freebsd_repos:
       sensu:
         enabled: "true"
@@ -55,7 +100,7 @@ None
     sensu_client_config_fragments:
       client:
         client:
-          name: "{{ ansible_fqdn }}"
+          name: foo
           address: 127.0.0.1
           subscriptions:
             - production

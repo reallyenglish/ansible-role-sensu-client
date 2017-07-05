@@ -1,0 +1,6 @@
+---
+
+- name: Install sensu-client
+  yum:
+    name: sensu
+    state: present
