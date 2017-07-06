@@ -12,6 +12,11 @@ ports   = []
 default_user = "root"
 default_group = "root"
 ip_address = "127.0.0.1"
+gem_binary = "/opt/sensu/embedded/bin/gem"
+plugins = [
+  "sensu-plugins-disk-checks",
+  "sensu-plugins-load-checks"
+]
 
 case os[:family]
 when "openbsd"
@@ -19,6 +24,7 @@ when "openbsd"
   group = "_sensu"
   default_group = "wheel"
   service = "sensu_client"
+  gem_binary = "gem"
 when "freebsd"
   config_dir = "/usr/local/etc/sensu"
   default_group = "wheel"
@@ -95,6 +101,14 @@ describe file(log_dir) do
   it { should be_mode 755 }
   it { should be_owned_by user }
   it { should be_grouped_into group }
+end
+
+plugins.each do |p|
+  describe command("#{gem_binary} list #{p} -q | cut -d' ' -f1") do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should eq "" }
+    its(:stdout) { should match(/^#{Regexp.escape(p)}$/) }
+  end
 end
 
 describe service(service) do

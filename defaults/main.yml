@@ -10,3 +10,5 @@ sensu_client_log_dir: /var/log/sensu
 sensu_client_flags: ""
 sensu_client_config: {}
 sensu_client_config_fragments: {}
+sensu_client_gems: []
+sensu_client_gem_binary: gem

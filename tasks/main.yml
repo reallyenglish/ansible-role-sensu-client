@@ -49,6 +49,8 @@
   with_items: "{{ sensu_client_config_fragments.keys() }}"
   notify: Restart sensu-client
 
+- include: "plugins.yml"
+
 - name: Start sensu-client
   service:
     name: "{{ sensu_client_service }}"

@@ -1,0 +1,15 @@
+---
+
+- name: Install or remove plugins
+  # XXX sensu-install is NOT used here because the command does not have enough
+  # features, such as listing all installed plug-ins. even if it had, creating
+  # an ansible module would be better
+  gem:
+    executable: "{{ sensu_client_gem_binary }}"
+    state: "{{ item.state }}"
+    name: "{{ item.name }}"
+    version: "{{ item.version | default() }}"
+    pre_release: "{{ item.pre_release | default('no') }}"
+    repository: "{{ item.repository | default('') }}"
+    user_install: no
+  with_items: "{{ sensu_client_gems }}"

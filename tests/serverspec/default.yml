@@ -41,3 +41,9 @@
         transport:
           name: rabbitmq
           reconnect_on_error: True
+    sensu_client_gem_binary: "{% if ansible_os_family == 'OpenBSD' %}gem{% else %}/opt/sensu/embedded/bin/gem{% endif %}"
+    sensu_client_gems:
+      - name: sensu-plugins-disk-checks
+        state: present
+      - name: sensu-plugins-load-checks
+        state: present
