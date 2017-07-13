@@ -1,3 +1,7 @@
+## Release 1.2.1
+
+* 71022b1 [bugfix] patch sensu-client (#7)
+
 ## Release 1.2.0
 
 * 0d5be3f [feature] support plug-ins (#5)
