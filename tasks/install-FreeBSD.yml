@@ -4,3 +4,24 @@
   pkgng:
     name: sensu
     state: present
+
+- name: Patch sensu-client
+  # XXX without additional PATH, sensu-client cannot find installed plug-ins
+  # binaries under /opt/sensu/embedded/bin
+  patch:
+    backup: yes
+    src: files/FreeBSD/patch-sensu-client
+    dest: /usr/local/etc/rc.d/sensu-client
+
+- name: Get the path to "lib/sensu/transport/rabbitmq.rb"
+  shell: "{{ sensu_client_gem_binary }} content sensu-transport | grep 'lib/sensu/transport/rabbitmq.rb$'"
+  register: register_gem_content_sensu_transport
+  changed_when: false
+
+- name: Patch sensu-transport
+  # XXX sensu-transport raises an exception at initial boot. have not
+  # invetigated further
+  patch:
+    backup: yes
+    src: files/FreeBSD/patch_undefined_method_for_nilclass
+    dest: "{{ register_gem_content_sensu_transport.stdout }}"

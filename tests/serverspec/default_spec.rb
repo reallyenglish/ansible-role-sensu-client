@@ -12,7 +12,8 @@ ports   = []
 default_user = "root"
 default_group = "root"
 ip_address = "127.0.0.1"
-gem_binary = "/opt/sensu/embedded/bin/gem"
+embedded_bin_dir = "/opt/sensu/embedded/bin"
+gem_binary = "#{embedded_bin_dir}/gem"
 plugins = [
   "sensu-plugins-disk-checks",
   "sensu-plugins-load-checks"
@@ -24,6 +25,8 @@ when "openbsd"
   group = "_sensu"
   default_group = "wheel"
   service = "sensu_client"
+  # XXX duplicated but this allows same tests to run on all platforms
+  embedded_bin_dir = "/bin"
   gem_binary = "gem"
 when "freebsd"
   config_dir = "/usr/local/etc/sensu"
@@ -31,6 +34,7 @@ when "freebsd"
 end
 config = "#{config_dir}/config.json"
 
+# installed by system gem or packages provided by the upstream
 if os[:family] == "openbsd"
   describe package("sensu") do
     it do
@@ -47,6 +51,32 @@ if os[:family] == "openbsd"
 else
   describe package(package) do
     it { should be_installed }
+  end
+end
+
+# platform-specific tests
+case os[:family]
+when "openbsd"
+  ["check-load.rb", "check-disk-usage.rb"].each do |f|
+    describe file("/usr/local/bin/#{f}") do
+      it { should exist }
+      it { should be_symlink }
+    end
+  end
+when "freebsd"
+  describe file("/usr/local/etc/rc.d/sensu-client") do
+    it { should exist }
+    it { should be_file }
+    # patched?
+    its(:content) { should match(/^sensu_env=/) }
+  end
+
+  path_to_patch_target = Specinfra.backend.run_command("#{gem_binary} content sensu-transport | grep 'lib/sensu/transport/rabbitmq.rb$'").stdout.strip
+  describe file(path_to_patch_target) do
+    it { should exist }
+    it { should be_file }
+    # patched?
+    its(:content) { should match(/#{Regexp.escape(':user => (options.nil? || ! options.has_key?(:user)) ? "" : options[:user]')}/) }
   end
 end
 
@@ -109,6 +139,20 @@ plugins.each do |p|
     its(:stderr) { should eq "" }
     its(:stdout) { should match(/^#{Regexp.escape(p)}$/) }
   end
+end
+
+# XXX these unrealistic thresholds are intended not to cause failures in
+# jenkins environment.
+describe command("env PATH=\"#{embedded_bin_dir}:$PATH\" check-load.rb -c 1000,1000,1000 -w 900,900,900") do
+  its(:stdout) { should match(/\s(?:OK):/) }
+  its(:stderr) { should eq "" }
+  its(:exit_status) { should eq 0 }
+end
+
+describe command("env PATH=\"#{embedded_bin_dir}:$PATH\" check-disk-usage.rb -I / -c 99 -w 99") do
+  its(:stdout) { should match(/\s(?:OK):/) }
+  its(:stderr) { should eq "" }
+  its(:exit_status) { should eq 0 }
 end
 
 describe service(service) do

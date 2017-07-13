@@ -1,0 +1,11 @@
+--- /opt/sensu/embedded/lib/ruby/gems/2.4.0/gems/sensu-transport-7.0.2/lib/sensu/transport/rabbitmq.rb.orig	2017-07-12 01:34:08.827786000 +0000
++++ /opt/sensu/embedded/lib/ruby/gems/2.4.0/gems/sensu-transport-7.0.2/lib/sensu/transport/rabbitmq.rb	2017-07-12 01:34:47.388993000 +0000
+@@ -207,7 +207,7 @@
+         on_possible_auth_failure = Proc.new {
+           @logger.warn("transport connection error", {
+             :reason => "possible authentication failure. wrong credentials?",
+-            :user => options[:user]
++            :user => (options.nil? || ! options.has_key?(:user)) ? "" : options[:user]
+           })
+           reconnect
+         }

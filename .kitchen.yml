@@ -42,11 +42,13 @@ platforms:
     driver:
       box: trombik/ansible-ubuntu-16.04-amd64
       box_check_update: false
+      box_version: 0.1.0
 
   - name: centos-7.3-x86_64
     driver:
       box: trombik/ansible-centos-7.3-x86_64
       box_check_update: false
+      box_version: 1.0.0
 
   - name: openbsd-6.0-amd64
     driver:

@@ -1,0 +1,10 @@
+--- sensu-client.orig	2017-07-11 07:21:57.039864000 +0000
++++ sensu-client	2017-07-11 07:22:31.635807000 +0000
+@@ -15,6 +15,7 @@
+ 
+ pidfile="/var/run/sensu/sensu-client.pid"
+ procname="/opt/sensu/bin/sensu-client"
++sensu_env="PATH=${PATH}:/opt/sensu/embedded/bin"
+ 
+ extra_commands="validate_config"
+ 
