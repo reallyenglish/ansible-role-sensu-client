@@ -31,7 +31,7 @@
     src: config.json.j2
     dest: "{{ sensu_client_config_file }}"
     validate: "python -c 'import sys; import json; json.loads(open(sys.argv[1]).read())' %s"
-  notify: Restart sensu-client
+  notify: Restart sensu services
 
 
 - name: Create sensu_client_log_dir
@@ -47,7 +47,7 @@
     dest: "{{ sensu_client_conf_d_dir }}/{{ item }}.json"
     validate: "python -c 'import sys; import json; json.loads(open(sys.argv[1]).read())' %s"
   with_items: "{{ sensu_client_config_fragments.keys() }}"
-  notify: Restart sensu-client
+  notify: Restart sensu services
 
 - include: "plugins.yml"
 

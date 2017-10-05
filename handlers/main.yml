@@ -4,3 +4,4 @@
   service:
     name: "{{ sensu_client_service }}"
     state: restarted
+  listen: "Restart sensu services"

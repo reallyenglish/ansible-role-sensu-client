@@ -23,6 +23,7 @@
     src: OpenBSD.rc.j2
     dest: /etc/rc.d/sensu_client
     mode: 0555
+    validate: sh -n %s
 
 - name: Create sensu_client_group
   group:
