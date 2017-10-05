@@ -1,3 +1,7 @@
+## Release 1.2.2
+
+* 9f0aecb [bugfix] introduce new handler Restart sensu services (#11)
+
 ## Release 1.2.1
 
 * 71022b1 [bugfix] patch sensu-client (#7)
