@@ -122,7 +122,7 @@ describe file("#{config_dir}/conf.d/client.json") do
   it { should be_grouped_into default_group }
   its(:content_as_json) { should include("client" => include("name" => "foo")) }
   its(:content_as_json) { should include("client" => include("address" => ip_address)) }
-  its(:content_as_json) { should include("client" => include("subscriptions" => %w(production something))) }
+  its(:content_as_json) { should include("client" => include("subscriptions" => %w[production something])) }
 end
 
 describe file(log_dir) do

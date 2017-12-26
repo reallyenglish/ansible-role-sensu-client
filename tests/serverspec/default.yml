@@ -12,7 +12,8 @@
   vars:
     redhat_repo:
       sensu:
-        baseurl: https://sensu.global.ssl.fastly.net/yum/$releasever/$basearch
+        baseurl:
+          - https://sensu.global.ssl.fastly.net/yum/$releasever/$basearch
         gpgcheck: no
         enabled: yes
     apt_repo_keys_to_add:
